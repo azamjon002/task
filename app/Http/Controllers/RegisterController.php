@@ -11,14 +11,22 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RegisterController extends Controller
 {
-    public function store(StoreUserRequest $request)
+    public function store(Request $request)
     {
-//        abort_if(Gate::denies('profile_password_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $request->validate([
+            'name'     => ['required', 'string', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8','max:255'],
+        ]);
+
+        $id = User::orderBy('id', 'desc')->first()->id;
 
         $user = User::create([
+            'id'=>$id+1,
             'name'=>$request->name,
             'password'=>bcrypt($request->password),
         ]);
+
+        $user->roles()->sync(3);
 
         if ($user){
             Auth::login($user);

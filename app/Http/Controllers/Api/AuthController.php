@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,10 +34,14 @@ class AuthController extends Controller
 
             $count = User::where('name', $request->name)->first();
             if(!$count){
+                $id = User::orderBy('id', 'desc')->first()->id + 1;
                 $user = User::create([
+                    'id'=>$id,
                     'name' => $request->name,
                     'password' => bcrypt($request->password),
                 ]);
+                $user->roles()->sync(3);
+
                 $authToken = $user->createToken('auth-token')->plainTextToken;
                 event(new Registered($user));
 

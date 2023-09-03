@@ -7,12 +7,18 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
 
-    public function login(StoreUserRequest $request)
+    public function login(Request $request)
     {
+        $request->validate([
+            'name'=>'required',
+            'password'=>'required|min:8',
+        ]);
+
         $user = User::where('name', $request->name)->first();
 
         if ($user){
@@ -25,6 +31,7 @@ class AuthController extends Controller
         }else{
             return back()->with('additionalErrors', 'Ushbu nomdagi user mavjud emas');
         }
+
     }
     public function logout()
     {
