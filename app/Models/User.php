@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class );
     }
+
+    public function role_bormi($role)
+    {
+        return $this->roles()->where('id', $role)->exists();
+    }
 }

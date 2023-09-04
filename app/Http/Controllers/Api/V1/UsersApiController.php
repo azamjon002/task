@@ -6,22 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class UsersApiController extends Controller
 {
     public function index()
     {
-//        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        return new UserResource(User::with(['roles', 'filial'])->get());
+        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return new UserResource(User::with('roles')->get());
     }
 
     public function store(Request $request)
     {
-        $user = User::create($request->all());
-        $user->roles()->sync($request->input('roles', []));
+        $user = User::create([
+            'name'=>$request->name,
+            'password'=>bcrypt($request->password)
+        ]);
+        $user->roles()->sync(3);
 
         return (new UserResource($user))
             ->response()

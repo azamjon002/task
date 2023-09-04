@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', 'App\Http\Controllers\Api\AuthController@register');
 Route::post('login', 'App\Http\Controllers\Api\AuthController@login');
 
-Route::group(['prefix' => 'v1', 'as' => 'api.', 'namespace' => 'Api\V1\Admin', 'middleware' => ['auth:sanctum']], function () {
-
+Route::group(['prefix' => 'v1', 'as' => 'api.', 'middleware' => ['auth:sanctum']], function () {
+    Route::apiResource('users', '\App\Http\Controllers\Api\V1\UsersApiController');
+    Route::apiResource('tasks', '\App\Http\Controllers\Api\V1\TasksApiController');
 });
