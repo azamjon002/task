@@ -14,7 +14,6 @@ class UserController extends Controller
 {
     public function index()
     {
-
         abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $users = User::with('roles')->get();
@@ -44,5 +43,40 @@ class UserController extends Controller
         $user->roles()->sync($request->input('role_id', []));
 
         return redirect()->route('admin.users.index');
+    }
+
+    public function edit(User $user)
+    {
+        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $roles = \App\Models\Role::pluck('name', 'id');
+
+        return view('users.edit', compact('user', 'roles'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, User $user)
+    {
+        abort_if(Gate::denies('user_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $user->update(
+            [
+                'name'=>$request->name,
+                'password'=>bcrypt($request->password),
+            ]
+        );
+
+        $user->roles()->sync($request->input('role_id', []));
+
+        return redirect()->route('admin.users.index');
+
+    }
+
+    public function destroy(User $user)
+    {
+        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $user->delete();
+        return redirect()->back();
     }
 }

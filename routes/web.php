@@ -46,4 +46,5 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Auth', 'mid
     })->name('dashboard');
 
     Route::resource('users', '\App\Http\Controllers\Admin\UserController');
+    Route::resource('tasks', '\App\Http\Controllers\Admin\TaskController');
 });

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Gate;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class UsersApiController extends Controller
@@ -19,11 +19,22 @@ class UsersApiController extends Controller
 
     public function store(Request $request)
     {
-        $user = User::create([
-            'name'=>$request->name,
-            'password'=>bcrypt($request->password)
+        abort_if(Gate::denies('user_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $request->validate([
+            'name'=>'required',
+            'password'=>'required',
+            'role_id'=>'required',
         ]);
-        $user->roles()->sync(3);
+        $id = User::orderBy('id', 'desc')->first()->id;
+
+        $user = User::create([
+            'id'=>$id+1,
+            'name'=>$request->name,
+            'password'=>bcrypt($request->password),
+        ]);
+
+        $user->roles()->sync($request->input('role_id', []));
 
         return (new UserResource($user))
             ->response()
@@ -34,13 +45,21 @@ class UsersApiController extends Controller
     {
         abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        return new UserResource($user->load(['roles', 'filial']));
+        return new UserResource($user->load(['roles']));
     }
 
-    public function update(UpdateUserRequest $request, User $user)
+    public function update(Request $request, User $user)
     {
-        $user->update($request->all());
-        $user->roles()->sync($request->input('roles', []));
+        $request->validate([
+            'name'=>'required',
+            'password'=>'required',
+            'role_id'=>'required',
+        ]);
+        $user->update([
+           'name'=>$request->name,
+           'password'=>bcrypt($request->password)
+        ]);
+        $user->roles()->sync($request->input('role_id', []));
 
         return (new UserResource($user))
             ->response()

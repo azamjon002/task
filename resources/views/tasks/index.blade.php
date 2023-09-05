@@ -5,8 +5,10 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">Users Table</h4>
-                        <a href="{{route('admin.users.create')}}" class="btn btn-info">Create User</a>
+                        <h4 class="card-title">Tasks Table</h4>
+                        @can('task_create')
+                            <a href="{{route('admin.tasks.create')}}" class="btn btn-info">Create Task</a>
+                        @endcan
                     </div>
 
                     <div class="table-responsive">
@@ -15,36 +17,37 @@
                             <tr>
                                 <th>T/r</th>
                                 <th>Name</th>
-                                <th>Role</th>
+                                <th>Description</th>
+                                <th>User</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @forelse($users as $user)
+                            @forelse($tasks as $task)
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
-                                    <td>{{$user->name}}</td>
+                                    <td>{{$task->name}}</td>
                                     <td>
-                                        @forelse($user->roles as $role)
-                                            <label class="badge @if($role->id == 1) badge-primary @elseif($role->id == 2) badge-success @else badge-danger @endif">{{$role->name}}</label>
-                                        @empty
-
-                                        @endforelse
+                                        {{$task->description}}
                                     </td>
+                                    <td>{{$task->user->name }}</td>
                                     <td>
                                         @can('task_edit')
-                                            <a href="{{route('admin.users.edit', $user->id)}}">
+                                            <a href="{{route('admin.tasks.edit', $task->id)}}">
                                                 <span class="badge badge-info">Edit</span>
                                             </a>
                                         @endcan
 
-                                        @can('task_delete')
-                                            <form class="d-inline-flex" onclick="confirm('Ishonchingiz komilmi?')" action="{{route('admin.users.destroy', $user->id)}}" method="POST">
-                                                @method('DELETE')
-                                                @csrf
-                                                <button class="badge badge-danger">Delete</button>
-                                            </form>
-                                        @endcan
+
+                                            @can('task_delete')
+                                                <form class="d-inline-flex" onclick="confirm('Ishonchingiz komilmi?')" action="{{route('admin.tasks.destroy', $task->id)}}" method="POST">
+                                                    @method('DELETE')
+                                                    @csrf
+                                                    <button class="badge badge-danger">Delete</button>
+                                                </form>
+                                            @endcan
+
+
                                     </td>
                                 </tr>
                             @empty

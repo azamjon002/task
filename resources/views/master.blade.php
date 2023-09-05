@@ -54,23 +54,26 @@
                     <span class="menu-title">Dashboard</span>
                 </a>
             </li>
+
+            <li class="nav-item menu-items">
+                <a class="nav-link" href="{{route('admin.tasks.index')}}">
+              <span class="menu-icon">
+                <i class="mdi mdi-access-point"></i>
+              </span>
+                    <span class="menu-title">Tasks</span>
+                </a>
+            </li>
             @can('user_access')
+
                 <li class="nav-item menu-items">
-                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                          <span class="menu-icon">
-                            <i class="mdi mdi-laptop"></i>
-                          </span>
-                          <span class="menu-title">User Management</span>
-                          <i class="menu-arrow"></i>
+                    <a class="nav-link" href="{{route('admin.users.index')}}">
+              <span class="menu-icon">
+                <i class="mdi mdi-face"></i>
+              </span>
+                        <span class="menu-title">Users</span>
                     </a>
-                    <div class="collapse" id="ui-basic">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="{{route('admin.users.index')}}">Users</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="">Roles</a></li>
-                            <li class="nav-item"> <a class="nav-link" href="">Permissions</a></li>
-                        </ul>
-                    </div>
                 </li>
+
             @endcan
 
         </ul>
@@ -157,11 +160,6 @@
 <script src="{{asset('assets/vendors/owl-carousel-2/owl.carousel.min.js')}}"></script>
 <!-- End plugin js for this page -->
 <!-- inject:js -->
-<script src="{{asset('assets/js/off-canvas.js')}}"></script>
-<script src="{{asset('assets/js/hoverable-collapse.js')}}"></script>
-<script src="{{asset('assets/js/misc.js')}}"></script>
-<script src="{{asset('assets/js/settings.js')}}"></script>
-<script src="{{asset('assets/js/todolist.js')}}"></script>
 <!-- endinject -->
 <!-- Custom js for this page -->
 <script src="{{asset('assets/js/dashboard.js')}}"></script>

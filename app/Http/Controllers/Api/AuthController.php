@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -111,6 +108,25 @@ class AuthController extends Controller
                 'code'=>200,
             ]);
 
+        }catch (\Throwable $throwable){
+            return response()->json([
+                'message' => $throwable->getMessage(),
+                'status' => false,
+                'code' => 500,
+            ], 500);
+        }
+
+    }
+
+    public function logout(Request $request)
+    {
+        try {
+
+            auth()->user()->tokens()->delete();
+
+            return [
+                'message'=>'User Logged out',
+            ];
         }catch (\Throwable $throwable){
             return response()->json([
                 'message' => $throwable->getMessage(),

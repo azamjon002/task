@@ -15,12 +15,14 @@ class TasksApiController extends Controller
 {
     public function index()
     {
-//        abort_if(Gate::denies('user_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-        return new TaskResource(Task::all());
+        abort_if(Gate::denies('task_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        return new TaskResource(Task::paginate(10));
     }
 
     public function store(Request $request)
     {
+        abort_if(Gate::denies('task_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $request->validate([
            'name'=>'required',
            'description'=>'required',
@@ -36,13 +38,15 @@ class TasksApiController extends Controller
 
     public function show(Task $task)
     {
-//        abort_if(Gate::denies('user_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('task_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         return new TaskResource($task);
     }
 
     public function update(Request $request, Task $task)
     {
+        abort_if(Gate::denies('task_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
         $task->update($request->all());
 
         return (new TaskResource($task))
@@ -52,7 +56,7 @@ class TasksApiController extends Controller
 
     public function destroy(Task $task)
     {
-//        abort_if(Gate::denies('user_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('task_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $task->delete();
 
