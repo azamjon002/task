@@ -29,6 +29,7 @@ Create => [your_localhost/api/v1/tasks]      =>method=POST
 Edit => [your_localhost/api/v1/tasks/{id}]   =>method=PUT
 Show => [your_localhost/api/v1/tasks/{id}]   =>method=GET
 Delete => [your_localhost/api/v1/tasks/{id}] =>method=DELETE
+Name orqali qidiruv => [your_localhost/api/v1/tasks/search/{name}] =>method=GET
 ```
 Agar sizda ushbu actionlarga permission yoq bo'lsa 403 FORBIDDEN buyrug'ini olasiz.
 Bunda siz bajarmoqchi bo'lgan actionga permission berilgan user orqali login qilasiz va qaytarilgan access_token ni olib Bearer Tokenga qoyasiz va siz bajarmoqchi bo'lgan harakatni amalga oshirasiz.
